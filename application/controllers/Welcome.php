@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: feras
+ * Date: 9/27/17
+ * Time: 9:06 AM
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
@@ -20,6 +26,10 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+        $data['title'] = 'Task for Zont';
+        $this->load->view('templates/header', $data);
+        $this->load->view('index');
+        $this->load->view('templates/footer');
+
 	}
 }

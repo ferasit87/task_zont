@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: feras
+ * Date: 9/27/17
+ * Time: 9:06 AM
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Post extends CI_Controller
 {
@@ -6,11 +12,19 @@ class Post extends CI_Controller
     {
         /*-------------including all needed models*/
         parent::__construct();
+        $this->load->helper('url_helper');
+        $this->load->library('Jsonlib');
         $this->load->model('post_model');
         $this->load->model('vote_model');
         $this->load->model('user_model');
-        $this->load->helper('url_helper');
-        $this->load->library('jsonlib');
+    }
+
+    public function index()
+    {
+        $data['title'] = 'Task for Zont';
+        $this->load->view('templates/header', $data);
+        $this->load->view('post/index');
+        $this->load->view('templates/footer');
     }
     public function add()
     {
