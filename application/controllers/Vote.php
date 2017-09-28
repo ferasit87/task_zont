@@ -18,17 +18,32 @@ class Vote extends CI_Controller
         $this->load->helper('url_helper');
         $this->load->library('jsonlib');
     }
+    public function index()
+    {
+
+        $data['title'] = 'Task for Zont';
+        $this->load->view('templates/header', $data);
+        $this->load->view('vote/index');
+        $this->load->view('templates/footer');
+    }
     public function add()
     {
-        $post_id = '' ;
-        if ($post_id == null) $this->jsonlib->return_error();               //check empty values
+        $data = $_POST;
+        if (! isset($data['id_post']) || $data['id_post'] == '')
+            $this->jsonlib->return_error('empty id post');                                  //check empty values
         else {
-            $vote_id = $this->vote_model->set_vote();                       // add new vote
-            if ($vote_id == null) $this->jsonlib->return_error();            // check if added vote
+            if (! isset($data['value']) || $data['value'] == '0')
+                $this->jsonlib->return_error('empty vote value');                           //check empty values
             else {
-                $new_vote = $this->post_model->update_post_with_vote();     // update post with vote and get new vote sum
-                if ($new_vote == null) $this->jsonlib->return_error();
-                else $this->jsonlib->return_normal();
+                $vote_id = $this->vote_model->set_vote($data);                              // add new vote
+                if ($vote_id['error'])
+                    $this->jsonlib->return_error($vote_id['error']);                        // check if added vote
+                else {
+                    $new_avg_vote = $this->post_model->update_post_with_vote($data);        // update post with vote and get new vote sum
+                    if ($new_avg_vote == null)
+                        $this->jsonlib->return_error('error while updating post votes');
+                    else $this->jsonlib->return_normal(array('average rating'=> $new_avg_vote ));
+                }
             }
         }
 

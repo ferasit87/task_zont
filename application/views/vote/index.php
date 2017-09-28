@@ -10,16 +10,14 @@
 ?>
 <script type="text/javascript">
    function  addnewpost() {
-       var user = $('#user').val();
-       var content = $('#content').val();
-       var title = $('#title').val();
-       var post = {
-           user: user,
-           content:content,
-           title:title,
+       var id_post = $('#id_post').val();
+       var value = $('#value').val();
+       var vote = {
+           id_post: id_post,
+           value:value
        }
        $.ajax({
-           url: '/post/add/',
+           url: '/vote/add/',
            type: 'post',
            dataType: 'json',
            success: function (data) {
@@ -40,7 +38,7 @@
                $('#result').css("color","red");
                $('#result').html(data.responseText);
            },
-           data: post
+           data: vote
        });
    }
 
@@ -49,20 +47,23 @@
     <div class="bs-docs-section">
         <div class="row">
             <div class="col-sm-6 col-md-6">
-                <h2>Add new Post</h2>
+                <h2>Add vote to post</h2>
                 <div class="form-group">
-                    <label for="formGroupExampleInput">User</label>
-                    <input type="text" class="form-control" id="user" placeholder="логин">
+                    <label for="formGroupExampleInput">Post ID</label>
+                    <input type="text" class="form-control" id="id_post" placeholder="логин">
                 </div>
                 <div class="form-group">
-                    <label for="formGroupExampleInput">Tilte</label>
-                    <input type="text" class="form-control" id="title" placeholder="заголовок">
+                    <label for="exampleSelect1">Select vote </label>
+                    <select class="form-control" id="value">
+                        <option value="0">--</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label for="exampleTextarea">Content</label>
-                    <textarea class="form-control" id="content" rows="3"></textarea>
-                </div>
-                <button type="button" class="btn btn-primary" onclick="addnewpost();">Add new post </button>
+                <button type="button" class="btn btn-primary" onclick="addnewpost();">Add new vote</button>
             </div>
         </div>
     </div>

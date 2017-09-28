@@ -12,5 +12,23 @@ class User_model extends CI_Model
     {
         $this->load->database();
     }
+    public function set_user($name)                     //add new user
+    {
+        $data = array("name" => $name);
+        $this->db->insert('users', $data);
+        $data['id'] =  $this->db->insert_id();          // return new user id
+        return $data ;
+    }
+    public function get_by_name($name = '')             // get user by name
+    {
+        if ($name === '')                               // return all users if not name
+        {
+            $query = $this->db->get('users');
+            return $query->result_array();
+        }
+        $query = $this->db->get_where('users', array('name' => $name));
+        return $query->row_array();
+
+    }
 }
 ?>

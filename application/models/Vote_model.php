@@ -12,4 +12,12 @@ class Vote_model extends CI_Model
     {
         $this->load->database();
     }
+    public function set_vote($data)                     //add new vote
+    {
+        $err = $this->db->insert('votes', $data);
+        if ($err)
+            return array('error'=>$err['message']);
+        $data['id'] =  $this->db->insert_id();          // return new vote id
+        return $data ;
+    }
 }?>

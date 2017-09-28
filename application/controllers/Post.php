@@ -21,6 +21,7 @@ class Post extends CI_Controller
 
     public function index()
     {
+
         $data['title'] = 'Task for Zont';
         $this->load->view('templates/header', $data);
         $this->load->view('post/index');
@@ -28,17 +29,33 @@ class Post extends CI_Controller
     }
     public function add()
     {
-        $userid = $this->user_mode->get_user();                                 // check if user exist
-        if ($userid == null)                                                    // if not user creating new
-            $userid = $this->user_mode->set_user();
-        if ($userid == null) $this->jsonlib->return_error();                    // check added new user or not
-        else {
-            $post_id = $this->post_model->set_post();                           // add new post
-            if ($post_id == null) $this->jsonlib->return_error();               // check if added post
-            else $this->jsonlib->return_normal();
+        $data = $_POST;
+        if (! isset($data['user']) || $data['user'] == '')
+            $this->jsonlib->return_error('empty user name');                            // check empty value user
+        else{
+            if (! isset($data['content']) || $data['content'] == '')                    // check empty value content
+                $this->jsonlib->return_error('empty content post');
+            else {
+                if (! isset($data['title']) || $data['title'] == '')                    // check empty value title
+                    $this->jsonlib->return_error('empty title post');
+                else {
+                    $user = $this->user_model->get_by_name($data['user']);              // check if user exist
+                    if ($user == null)                                                  // if not user creating new
+                        $user = $this->user_model->set_user($data['user']);
+                    if ($user == null)
+                        $this->jsonlib->return_error('cannot add new user');            // check added new user or not
+                    else {
+                        $data['user'] = $user;
+                        $post = $this->post_model->set_post($data);                     // add new post
+                        if ($post['id'] == null)
+                            $this->jsonlib->return_error('cannot add new post');        // check if added post
+                        else $this->jsonlib->return_normal($post);
+                    }
+                }
+            }
         }
     }
-    public function get_top_n($n) {
+    public function gettop($n = 5 ) {
         if ($n > 0 ){                                                           //check empty values
             $this->post_model->get_top_n($n);
         }else {
