@@ -182,18 +182,6 @@ SELECT pg_catalog.setval('posts_id_seq', 1, false);
 --
 
 COPY users (id, name, "timestamp") FROM stdin;
-1	feras	2017-09-27 02:52:34.021712
-2	feras1	2017-09-27 02:52:34.021712
-3	ali	2017-09-27 02:52:34.021712
-4	feras2	2017-09-27 02:52:34.021712
-5	feras12	2017-09-27 02:52:34.021712
-6	ali2	2017-09-27 02:52:34.021712
-7	feras3	2017-09-27 02:52:34.021712
-8	feras13	2017-09-27 02:52:34.021712
-9	ali3	2017-09-27 02:52:34.021712
-10	feras23	2017-09-27 02:52:34.021712
-11	feras123	2017-09-27 02:52:34.021712
-12	ali23	2017-09-27 02:52:34.021712
 \.
 
 
@@ -201,7 +189,7 @@ COPY users (id, name, "timestamp") FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('users_id_seq', 12, true);
+SELECT pg_catalog.setval('users_id_seq', 1, false);
 
 
 --
@@ -244,6 +232,20 @@ ALTER TABLE ONLY votes
 
 
 --
+-- Name: id_user_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX id_user_index ON posts USING btree (user_id);
+
+
+--
+-- Name: ip_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ip_index ON posts USING btree (post_user_ip);
+
+
+--
 -- Name: name_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -279,4 +281,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-

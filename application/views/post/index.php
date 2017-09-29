@@ -32,10 +32,7 @@
                 $('#result').html(output);
            },
            error :  function (data) {
-               var output = '' ;
-               for (var property in data) {
-                   output += property + ': ' + data[property]+'; ';
-               }
+
                console.log(data.responseText);
                $('#result').css("color","red");
                $('#result').html(data.responseText);

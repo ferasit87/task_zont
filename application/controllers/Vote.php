@@ -14,8 +14,6 @@ class Vote extends CI_Controller
         parent::__construct();
         $this->load->model('post_model');
         $this->load->model('vote_model');
-        $this->load->model('user_model');
-        $this->load->helper('url_helper');
         $this->load->library('jsonlib');
     }
     public function index()
@@ -28,7 +26,7 @@ class Vote extends CI_Controller
     }
     public function add()
     {
-        $data = $_POST;
+        $data = $_REQUEST;
         if (! isset($data['id_post']) || $data['id_post'] == '')
             $this->jsonlib->return_error('empty id post');                                  //check empty values
         else {

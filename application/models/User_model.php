@@ -5,7 +5,6 @@
  * Date: 9/27/17
  * Time: 9:23 AM
  */
-
 class User_model extends CI_Model
 {
     public function __construct()
@@ -19,6 +18,13 @@ class User_model extends CI_Model
         $data['id'] =  $this->db->insert_id();          // return new user id
         return $data ;
     }
+    public function set_users($data)                     //add new users
+    {
+        foreach ($data as $item)
+        {
+            $this->db->insert('users', array("name" => $item));
+        }
+    }
     public function get_by_name($name = '')             // get user by name
     {
         if ($name === '')                               // return all users if not name
@@ -28,7 +34,6 @@ class User_model extends CI_Model
         }
         $query = $this->db->get_where('users', array('name' => $name));
         return $query->row_array();
-
     }
 }
 ?>

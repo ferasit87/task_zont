@@ -13,13 +13,22 @@ class User extends CI_Controller
         /*-------------including all needed models*/
         parent::__construct();
         $this->load->model('post_model');
-        $this->load->model('vote_model');
-        $this->load->model('user_model');
-        $this->load->helper('url_helper');
         $this->load->library('jsonlib');
     }
-    public function get_difference_ips(){
+    public function index()                 //simple interfes for test multiusing ip with Ajax and Json
+    {
 
+        $data['title'] = 'Task for Zont';
+        $this->load->view('templates/header', $data);
+        $this->load->view('user/index');
+        $this->load->view('templates/footer');
+    }
+    public function get_difference_ips(){           // function work with json for get multiusing ip
+        $result = $this->post_model->get_multiuser_ip();
+        if (count($result) > 0 )
+            $this->jsonlib->return_normal($result);        // check if added post
+        else
+            $this->jsonlib->return_error('there is no multiuseres IP');
     }
 }
 ?>

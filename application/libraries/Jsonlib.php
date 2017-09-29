@@ -18,7 +18,7 @@ class Jsonlib {
     {
         $json = json_encode(array("jsonError" =>  $err));
         echo $json;
-        http_response_code(442);            // Set HTTP response status code to: 422 - Unprocessable entity Error
+        http_response_code(422);            // Set HTTP response status code to: 422 - Unprocessable entity Error
     }
 }
 ?>

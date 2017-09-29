@@ -14,8 +14,14 @@ class Post_model extends CI_Model
     }
     public function get_top_n($n = 5)
     {
-        $query = $this->db->query("SELECT * FROM posts ORDER BY vote_sum DESC limit $n") ; // Query for get top n voted post
-        return  $query->result_array();
+        $query = $this->db->query("SELECT id, title , ( vote_sum / vote_count ) as avg , user_id 
+                                    FROM posts where vote_count > 0 ORDER BY avg DESC limit $n") ; // Query for get top n voted post
+        $data = $query->result_array();
+        if (count($data) == 0) return array('error'=>"there no top n ");
+        foreach ($data as $k=>$item){
+            $data[$k]['avg'] = intval($item['avg']) ;
+        }
+        return  $data ;
     }
     public function set_post($data)                                                         // add new post with needed data
     {
@@ -26,14 +32,23 @@ class Post_model extends CI_Model
         $data['id'] =  $this->db->insert_id();
         return $data ;
     }
+    public function set_posts($data)
+    {
+        foreach ($data as $item)
+        {
+            $this->db->insert('posts', $item);
+        }
+    }
     public function update_post_with_vote($datavote)                            //  update votes post after voting
     {
-        $data = $this->get_post($datavote['id_post']);                          //get previous data
-        $data['vote_count'] += 1;                                               //update votes count
-        $data['vote_sum'] += $datavote['value'];                                //update votes sum
-        $this->db->where('id', $datavote['id_post']);
-        $this->db->update('posts', $data);                                      // updating
-        return  (intval($data['vote_sum']/$data['vote_count']));            //get average
+        $query = $this->db->query("
+        WITH upd AS  (UPDATE posts SET vote_count = vote_count+1, vote_sum = vote_sum+".$datavote['value']."
+        WHERE id = ".$datavote['id_post']."
+        RETURNING vote_count, vote_sum) 
+        SELECT * FROM upd;
+        ");
+        $data = $query->row_array();
+        return  (round($data['vote_sum']/$data['vote_count']));            //return round  average
     }
     public function get_post($id)                                               // get post by id
     {
@@ -41,7 +56,27 @@ class Post_model extends CI_Model
         return $query->row_array();
 
     }
-
+    public function get_multiuser_ip ()
+    {
+        $query = $this->db->query("
+        WITH upd AS (select post_user_ip , user_id   from posts group by post_user_ip , user_id) 
+        select post_user_ip , user_id , users.name  
+        from  upd
+        inner join users on users.id = upd.user_id 
+        where post_user_ip in 
+             (select post_user_ip
+              from upd
+              group by post_user_ip  
+              HAVING count(post_user_ip) > 1)  
+        ");
+        $data = $query->result_array();
+        $merrgeddata = array();
+        foreach ($data as $key=>$value)
+        {
+            $merrgeddata[$value['post_user_ip']][]= array("name"=> $value["name"], "id" => $value["user_id"]);
+        }
+        return $merrgeddata ;
+    }
 
 
 }

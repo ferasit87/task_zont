@@ -5,11 +5,9 @@
  * Date: 9/27/17
  * Time: 9:06 AM
  */
-
-
 ?>
 <script type="text/javascript">
-   function  addnewpost() {
+   function  addnewvote() {
        var id_post = $('#id_post').val();
        var value = $('#value').val();
        var vote = {
@@ -30,10 +28,6 @@
                 $('#result').html(output);
            },
            error :  function (data) {
-               var output = '' ;
-               for (var property in data) {
-                   output += property + ': ' + data[property]+'; ';
-               }
                console.log(data.responseText);
                $('#result').css("color","red");
                $('#result').html(data.responseText);
@@ -63,7 +57,7 @@
                         <option value="5">5</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="addnewpost();">Add new vote</button>
+                <button type="button" class="btn btn-primary" onclick="addnewvote();">Add new vote</button>
             </div>
         </div>
     </div>
